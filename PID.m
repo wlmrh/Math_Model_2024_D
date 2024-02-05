@@ -24,7 +24,7 @@ for i =  2 : 1 : length(lake_depth)
     err(i) = rst(i) - ideal; % 计算当前值与目标值之间的水流量,参数为上个月的实际通过水流量和其他因素other的函数
     integration(i) = integration(i - 1) + (err(i) + err(i - 1)) / 2 * interval;
     dif(i) = (err(i) - err(i - 1)) / interval; 
-    pid(i) = kp * err(i) + ki * integration(i) + kd * dif(i) + other(i) / pid_weight;
+    pid(i) = kp * err(i) + (i / length(lake_depth)) * ki * integration(i) + kd * dif(i) + other(i) / pid_weight;
     index = rem(i - 1, 12) + 1; year = 2000 + fix((i - 1) / 12);
     final_date = [num2str(year), '年', num2str(index), '月'];
     if pid(i) > Mary_avg(index) * 3600 * 24 * 30  %%
@@ -38,10 +38,10 @@ for i =  2 : 1 : length(lake_depth)
     show(i) = err(i) / ideal;
 end
 show(1) = err(1) / ideal;
-plot(time, err);
+plot(time, show);
 xlim([0 28]);
-xticks([0 2 4 6 8 10 12 14 16 18 20 22 24 26 28]);
+%xticks([0 2 4 6 8 10 12 14 16 18 20 22 24 26 28]);
 %set(gca,'XTickLabel',{'2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22', '24'});
-set(gca,'yticklabel',{'-0.8%', '-0.6%', '-0.4%', '-0.2%', '0', '0.2%', '0.4%', '0.6%', '0.8%'});
+%yticks([-0.008 -0.006 0.004 -0.002 0 0.002 0.004 0.006 0.008]);
 xlabel('Month') 
 ylabel('Average month error rate')
