@@ -8,7 +8,7 @@ set2 = [115.83953 4.81541 5.94392 -917.35772];
 set3 = [6474.46584 -11537.51703 8218.87738 -2690.42741 464.32447 -44.01315 2.1742 -0.04382];
 sheets = {"Lake Michigan and Lake Huron", "Lake Erie", "Lake Ontario"}
 Month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-kp = 2; ki = 3; kd = -0.1; pid_weight = 1;
+kp = 2; ki = 0.3; kd = -0.1; pid_weight = 1;
 ideal_level = [176.8014  174.7533   75.3023]; %  理想水位(m)
 lake_area =  [117300000000, 25744000000, 18960000000]; % 当前湖的表面积(m^2)
 area_sum = 0;
@@ -86,7 +86,7 @@ for i =  srt + 1 : 1 : srt + 12
     elseif pid(i) < (-limt)
         pid(i) = (-limt)
     end
-    index = rem(i - 1, 12) + s1; year = 2000 + fix((i - 1) / 12);
+    index = rem(i - 1, 12) + 1; year = 2000 + fix((i - 1) / 12);
     final_date = [num2str(year), '年', num2str(index), '月'];
     if pid(i) >Law_avg(index) * 3600 * 24 * 30  %%
         disp([final_date, "整月开闸", "水库存储水量为：", num2str(pid(i) - Law_avg(index) * 3600 * 24 * 30), "m ^ 3"]);
