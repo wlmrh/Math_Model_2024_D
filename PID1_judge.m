@@ -38,7 +38,7 @@ if pid(srt) > limt
 elseif pid(srt) < (-limt)
     pid(srt) = (-limt)
 end
-for i =  205 : 1 : 216
+for i =  srt + 1 : 1 : srt + 12
     time(i) = i;
     other(i) = situation(set1, set2, set3, rem(i, 12), lake_area) * lake_area / 1000; % 其他因素对于水流量的影响：降水，蒸发，用水
     rst(i) = rst(i - 1) + other(i - 1) - pid_weight * pid(i - 1); % 根据上个一月的水量，上一月的开水坝情况和上一个月其他因素的影响计算得出该月的水量
@@ -54,10 +54,13 @@ for i =  205 : 1 : 216
     index = rem(i - 1, 12) + 1; year = 2000 + fix((i - 1) / 12);
     final_date = [num2str(year), '年', num2str(index), '月'];
     if pid(i) > Mary_avg(index) * 3600 * 24 * 30  %%
+        out(i) = Mary_avg(index) * 3600 * 24 * 30;
         disp([final_date, "整月开闸", "水库存储水量为：", num2str(pid(i) - Mary_avg(index) * 3600 * 24 * 30), "m ^ 3"]);
     elseif pid(i) < 0
+        out(i) = 0;
         disp([final_date, "水坝放水:", num2str(-pid(i)), "m ^ 3"]);
     else
+        out(i) = pid(i);
         open_period = pid(i) / Mary_avg(index);
         disp([final_date, "水坝开放时间为:", num2str(open_period), 's']);
     end
@@ -65,9 +68,10 @@ for i =  205 : 1 : 216
 end
 show(1) = err(1) / ideal;
 plot(time, show);
-xlim([205 216]);
-yticks([-0.002 -0.0015 -0.001 -0.0005 0 0.0005 0.001 0.0015 0.002]);
+xlim([srt + 1 srt + 12]);
+yticks([-0.0025 -0.0020 -0.0015 -0.001 -0.0005 0 0.0005 0.001 0.0015 0.002 0.0025]);
 set(gca,'XTickLabel',{'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'});
-set(gca,'yticklabel',{'-0.2%', '-0.15%', '-0.1%', '-0.05%', '0', '0.05%', '0.1%', '0.15%', '0.2%'});
+set(gca,'yticklabel',{'-0.25%', '-0.2%', '-0.15%', '-0.1%', '-0.05%', '0', '0.05%', '0.1%', '0.15%', '0.2%', '0.25%'});
 xlabel('Month') 
 ylabel('Average month error rate')
+title("2017 Lake Superior");
