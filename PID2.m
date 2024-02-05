@@ -24,7 +24,7 @@ end
 datas = (data');
 lake_amount = (datas(:))';% 当前湖在各个月份的水量
 ideal = 8888461594400;
-srt = 204; limt = 40000000000;
+srt = 204; limt = 30000000000;
 %计算从2000年开始每一个月的水量变化
 new_data1 = xlsread('2021PrecipCoordination.xlsx', "2021Coordination(mm)", "O113:Z132") * lake_area(1) + xlsread('2021PrecipCoordination.xlsx', "2021Coordination(mm)", "AO113:AZ132")  * lake_area(2) + xlsread('2021PrecipCoordination.xlsx', "2021Coordination(mm)", "BB113:BM132") * lake_area(3);
 final_data = new_data1 / 1000;
@@ -99,10 +99,12 @@ for i =  srt + 1 : 1 : srt + 12
     show(i) = err(i) / ideal;
 end
 show(1) = err(1) / ideal;
-plot(time, show);
-xlim([205 216]);
-%yticks([-0.002 -0.0015 -0.001 -0.0005 0 0.0005 0.001 0.0015 0.002]);
+plot(time, show);   
+xlim([srt + 1 srt + 12]);
+ylim([-0.002 0.003]);
+yticks([-0.002 -0.0015 -0.001 -0.0005 0 0.0005 0.001 0.0015 0.002 0.0025 0.003]);
 set(gca,'XTickLabel',{'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'});
-%set(gca,'yticklabel',{'-0.2%', '-0.15%', '-0.1%', '-0.05%', '0', '0.05%', '0.1%', '0.15%', '0.2%'});
+set(gca,'yticklabel',{'-0.2%', '-0.15%', '-0.1%', '-0.05%', '0', '0.05%', '0.1%', '0.15%', '0.2%', '0.25%', '0.3%'});
 xlabel('Month') 
 ylabel('Average month error rate')
+title("2017 Other Lakes");
